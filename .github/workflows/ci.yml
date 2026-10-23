@@ -36,10 +36,10 @@ jobs:
       - name: Format check
         run: cargo fmt --all -- --check
 
-      - name: Clippy (warnings allowed; the source carries C++-compatibility idioms)
+      - name: "Clippy (warnings allowed; C++-compatibility idioms)"
         run: cargo clippy --all-targets
 
-      - name: Build (default features: CPU fp64 only)
+      - name: "Build (default features: CPU fp64 only)"
         run: cargo build --release
 
       # GALAXIA_DATA_DIR is intentionally NOT set: tests that need the (non-redistributable)
