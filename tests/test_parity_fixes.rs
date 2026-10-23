@@ -411,11 +411,9 @@ fn test_batch_failure_modes() {
     let bad_trees_dir = bad_data_dir.join("BHTree");
     std::fs::create_dir_all(&bad_trees_dir).unwrap();
     // Copy Isochrones, Extinction, Model from real data dir to bad_data_dir
-    let _ =
-        std::os::unix::fs::symlink(data_dir.join("Isochrones"), bad_data_dir.join("Isochrones"));
-    let _ =
-        std::os::unix::fs::symlink(data_dir.join("Extinction"), bad_data_dir.join("Extinction"));
-    let _ = std::os::unix::fs::symlink(data_dir.join("Model"), bad_data_dir.join("Model"));
+    for d in ["Isochrones", "Extinction", "Model"] {
+        link_dir(&data_dir.join(d), &bad_data_dir.join(d));
+    }
     // Create an invalid/corrupted BHTree file for pop 0
     let bad_tree_file = bad_trees_dir.join("ThinDisk0_E1.ebf");
     {
@@ -439,4 +437,17 @@ fn test_batch_failure_modes() {
 
     // Clean up
     let _ = std::fs::remove_dir_all(temp_base);
+}
+
+/// Directory symlink on every platform (Windows needs symlink permission or developer mode).
+fn link_dir(src: &std::path::Path, dst: &std::path::Path) {
+    #[cfg(unix)]
+    let r = std::os::unix::fs::symlink(src, dst);
+    #[cfg(windows)]
+    let r = std::os::windows::fs::symlink_dir(src, dst);
+    if let Err(e) = r {
+        if e.kind() != std::io::ErrorKind::AlreadyExists {
+            panic!("cannot link {} -> {}: {e}", dst.display(), src.display());
+        }
+    }
 }
