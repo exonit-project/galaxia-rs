@@ -8,7 +8,8 @@ positions, velocities, ages, metallicities, masses, stellar parameters, magnitud
 written as EBF files (the same format as the original).
 
 Galaxia was written by **Sanjib Sharma and Joss Bland-Hawthorn**; this port is a derivative work.
-See [NOTICE](NOTICE) and [LICENSE](LICENSE). **If you use this software, please cite Sharma, S.,
+**This is an unofficial port**: it is not maintained, reviewed or endorsed by the original authors, and any
+problem in it is ours, not theirs. See [NOTICE](NOTICE) and [LICENSE](LICENSE). **If you use this software, please cite Sharma, S.,
 Bland-Hawthorn, J., Johnston, K. V., Binney, J. 2011, ApJ, 730, 3 first.**
 
 ## Relation to Galaxia 0.7.2
