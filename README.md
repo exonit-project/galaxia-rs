@@ -146,6 +146,31 @@ Statistical comparison tooling is in `validation/` (see [VALIDATION.md](VALIDATI
   targets, toolchains or build flags (e.g. fast-math, other CPU architectures).
 * Memory: ~6-7 GiB are needed to hold the model data.
 
+## Known model limitations seen in use (help welcome)
+
+These are properties of the Galaxia 0.7.2 **model and its default extinction scheme**, which galaxia-rs reproduces
+statistically; they are not porting errors. We report them because we hit them while using galaxia-rs to build
+background stellar populations near the Galactic plane, and we would welcome pointers, fixes or collaboration
+(please open an issue).
+
+* **Extinction near the plane.** With the default extinction scheme, the E(B-V) Galaxia assigns to stars in low-|b|
+  fields we tested was about 2x the value of the Combined19 3-D dust map (Bovy et al. 2016 `mwdust`, `Combined19`)
+  at the same positions and distances (about 2.2x for Green et al. 2019 alone). The Galaxia paper itself notes that
+  the Schlegel et al. (1998) maps it normalises to overestimate extinction in the plane (Sharma et al. 2011, Sect. 2.6: about 30 %
+  where A_V > 0.5; Galaxia's default scheme scales each sightline so that the total extinction equals Schlegel's).
+* **Star counts versus Gaia DR3.** Comparing counts in 0.1 deg^2 fields per TESS-magnitude bin with Gaia DR3 (G < 21):
+  with the default extinction, low-latitude fields had too few bright stars and too many faint ones. After replacing
+  the extinction with Combined19, counts became too high in all bins (median model/Gaia ratios of about 1.1-1.2 for
+  T 12-18 and about 2.2 for T 18-21.5 in 233 low-latitude test fields), and an excess of faint stars (median about 1.5)
+  remained in test fields with almost no dust. A single global factor per magnitude bin did not bring all fields into
+  agreement. This points to the stellar-density / luminosity-function side of the model, not only to dust.
+* Our tests used specific settings (photometric system, magnitude limits, field size, our Gaia-to-T relation), so the
+  numbers are indicative, not a calibration. Related earlier result: Farnhill et al. (2016, MNRAS,
+  doi:10.1093/mnras/stv2994) compared IPHAS star counts (i < 18) with the Besancon model (Robin et al. 2003), on
+  which Galaxia's model is based, and found a marked over-prediction near the Galactic equator at l ~ 30 deg (a
+  factor of two or more) with either of two 3-D extinction maps, but good agreement at l ~ 90 and 175 deg; they
+  left open whether the cause is the extinction or a too well-populated model.
+
 ## Citation
 
 Please cite **Sharma, S., Bland-Hawthorn, J., Johnston, K. V., & Binney, J. 2011, ApJ, 730, 3**
